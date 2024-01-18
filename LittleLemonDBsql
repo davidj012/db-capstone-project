@@ -1,0 +1,83 @@
+CREATE TABLE `Bookings` (
+  `booking_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `staff_id` int NOT NULL,
+  `date` datetime NOT NULL,
+  `table_num` int NOT NULL,
+  PRIMARY KEY (`booking_id`),
+  KEY `customer_id_idx` (`customer_id`),
+  KEY `staff_id_idx` (`staff_id`),
+  CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`customer_id`),
+  CONSTRAINT `staff_id` FOREIGN KEY (`staff_id`) REFERENCES `Staff` (`staff_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+CREATE TABLE `Customers` (
+  `customer_id` int NOT NULL,
+  `customer_name` varchar(50) NOT NULL,
+  `phone` int NOT NULL,
+  `email` varchar(50) NOT NULL,
+  PRIMARY KEY (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+CREATE TABLE `Delivery` (
+  `delivery_id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL,
+  `delivery_date` datetime NOT NULL,
+  `status` varchar(50) NOT NULL,
+  PRIMARY KEY (`delivery_id`),
+  KEY `order_id_idx` (`order_id`),
+  CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+CREATE TABLE `Menu` (
+  `menu_id` int NOT NULL AUTO_INCREMENT,
+  `cuisines` varchar(50) NOT NULL,
+  `starters` varchar(50) NOT NULL,
+  `courses` varchar(50) NOT NULL,
+  `drinks` varchar(50) NOT NULL,
+  `desserts` varchar(50) NOT NULL,
+  PRIMARY KEY (`menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+
+CREATE TABLE `Orders` (
+  `order_id` int NOT NULL AUTO_INCREMENT,
+  `customer_id` int NOT NULL,
+  `menu_id` int NOT NULL,
+  `order_date` datetime NOT NULL,
+  `quantity` int NOT NULL,
+  `total_cost` decimal(2,0) NOT NULL,
+  PRIMARY KEY (`order_id`),
+  KEY `customer_id_idx` (`customer_id`),
+  KEY `menu_id_idx` (`menu_id`),
+  CONSTRAINT `customers_id` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`customer_id`),
+  CONSTRAINT `menu_id` FOREIGN KEY (`menu_id`) REFERENCES `Menu` (`menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+
+
+CREATE TABLE `Staff` (
+  `staff_id` int NOT NULL AUTO_INCREMENT,
+  `role` varchar(50) NOT NULL,
+  `salary` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`staff_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
