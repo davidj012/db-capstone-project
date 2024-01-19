@@ -42,13 +42,26 @@ CREATE TABLE `Delivery` (
 
 CREATE TABLE `Menu` (
   `menu_id` int NOT NULL AUTO_INCREMENT,
-  `cuisines` varchar(50) NOT NULL,
-  `starters` varchar(50) NOT NULL,
-  `courses` varchar(50) NOT NULL,
-  `drinks` varchar(50) NOT NULL,
-  `desserts` varchar(50) NOT NULL,
+  `menu_name` varchar(100) NOT NULL,
+  `menu_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`menu_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+CREATE TABLE `MenuItem` (
+  `item_id` int NOT NULL AUTO_INCREMENT,
+  `menu_id` int NOT NULL,
+  `item_name` varchar(100) NOT NULL,
+  `item_description` varchar(255) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `price` decimal(6,2) NOT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `menu_id_idx` (`menu_id`),
+  CONSTRAINT `menu_fk` FOREIGN KEY (`menu_id`) REFERENCES `Menu` (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 
@@ -81,3 +94,117 @@ CREATE TABLE `Staff` (
   `salary` decimal(6,2) NOT NULL,
   PRIMARY KEY (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
+
+
+
+
+
+
+INSERT INTO `Customers` (customer_id, customer_name, phone, email) VALUES
+(1, 'John Doe', '1234567890', 'john.doe@example.com'),
+(2, 'Jane Smith', '2345678901', 'jane.smith@example.com'),
+(3, 'Alice Johnson', '3456789012', 'alice.johnson@example.com'),
+(4, 'Michael Brown', '4567890123', 'michael.brown@example.com'),
+(5, 'Emily White', '5678901234', 'emily.white@example.com'),
+(6, 'David Wilson', '6789012345', 'david.wilson@example.com'),
+(7, 'Sarah Miller', '7890123456', 'sarah.miller@example.com'),
+(8, 'James Davis', '8901234567', 'james.davis@example.com'),
+(9, 'Maria Garcia', '9012345678', 'maria.garcia@example.com'),
+(10, 'Robert Martinez', '0123456789', 'robert.martinez@example.com');
+
+
+
+INSERT INTO `Staff` (staff_id, role, salary) VALUES
+(1, 'Waiter', 3000.00),
+(2, 'Chef', 5000.00),
+(3, 'Manager', 7000.00),
+(4, 'Busser', 2800.00),
+(5, 'Bartender', 3200.00),
+(6, 'Host', 2900.00),
+(7, 'Line Cook', 4000.00),
+(8, 'Pastry Chef', 4500.00),
+(9, 'Dishwasher', 2500.00),
+(10, 'Prep Cook', 3500.00);
+
+
+
+INSERT INTO `Menu` (menu_id, menu_name, menu_description) VALUES
+(1, 'Lunch Menu', 'A variety of lunch options'),
+(2, 'Dinner Menu', 'Fine dining selections for dinner'),
+(3, 'Breakfast Menu', 'Start your day with our breakfast'),
+(4, 'Beverages', 'A range of drinks and cocktails'),
+(5, 'Dessert Menu', 'Sweet treats to finish your meal'),
+(6, 'Kids Menu', 'Special meals for children'),
+(7, 'Vegetarian Menu', 'Delicious vegetarian and vegan options'),
+(8, 'Weekend Brunch', 'Brunch favorites for weekend mornings'),
+(9, 'Happy Hour', 'Specials for happy hour'),
+(10, 'Seasonal Specials', 'Seasonally inspired dishes');
+
+
+
+INSERT INTO `MenuItem` (item_id, menu_id, item_name, item_description, category, price) VALUES
+(1, 1, 'Caesar Salad', 'Classic Caesar with romaine lettuce', 'Starter', 8.99),
+(2, 1, 'Tomato Soup', 'Creamy tomato soup with basil', 'Starter', 6.99),
+(3, 2, 'Steak', 'Grilled ribeye steak with herbs', 'Main Course', 20.99),
+(4, 2, 'Salmon', 'Baked salmon with lemon butter', 'Main Course', 18.99),
+(5, 3, 'Pancakes', 'Fluffy pancakes with maple syrup', 'Breakfast', 9.99),
+(6, 3, 'Omelette', 'Three-egg omelette with choice of fillings', 'Breakfast', 10.99),
+(7, 4, 'Coffee', 'Freshly brewed coffee', 'Drink', 2.99),
+(8, 4, 'Iced Tea', 'Refreshing iced tea with lemon', 'Drink', 3.50),
+(9, 5, 'Cheesecake', 'New York style cheesecake', 'Dessert', 7.50),
+(10, 5, 'Chocolate Cake', 'Rich and moist chocolate cake', 'Dessert', 7.99);
+
+
+
+INSERT INTO `Bookings` (booking_id, customer_id, staff_id, date, table_num) VALUES
+(1, 1, 3, '2024-01-20 19:00:00', 5),
+(2, 2, 2, '2024-01-21 18:30:00', 3),
+(3, 3, 3, '2024-01-22 19:00:00', 2),
+(4, 4, 2, '2024-01-23 20:00:00', 4),
+(5, 5, 1, '2024-01-24 18:00:00', 1),
+(6, 6, 3, '2024-01-25 19:30:00', 6),
+(7, 7, 2, '2024-01-26 18:45:00', 8),
+(8, 8, 1, '2024-01-27 19:15:00', 7),
+(9, 9, 3, '2024-01-28 20:30:00', 10),
+(10, 10, 1, '2024-01-29 18:00:00', 9);
+
+
+
+
+
+INSERT INTO `Orders` (order_id, customer_id, menu_id, order_date, quantity, total_cost) VALUES
+(1, 1, 1, '2024-01-20 12:00:00', 2, 20),
+(2, 2, 2, '2024-01-21 12:30:00', 3, 30),
+(3, 3, 1, '2024-01-22 13:00:00', 1, 15),
+(4, 4, 3, '2024-01-23 13:30:00', 2, 25),
+(5, 5, 2, '2024-01-24 14:00:00', 1, 10),
+(6, 6, 1, '2024-01-25 14:30:00', 3, 35),
+(7, 7, 3, '2024-01-26 15:00:00', 2, 20),
+(8, 8, 2, '2024-01-27 15:30:00', 1, 15),
+(9, 9, 1, '2024-01-28 16:00:00', 2, 20),
+(10, 10, 3, '2024-01-29 16:30:00', 1, 10);
+
+
+
+
+
+INSERT INTO `Delivery` (delivery_id, order_id, delivery_date, status) VALUES
+(1, 1, '2024-01-20 20:00:00', 'Delivered'),
+(2, 2, '2024-01-21 21:00:00', 'Delivered'),
+(3, 3, '2024-01-22 20:30:00', 'In Transit'),
+(4, 4, '2024-01-23 19:45:00', 'In Transit'),
+(5, 5, '2024-01-24 20:15:00', 'Delivered'),
+(6, 6, '2024-01-25 21:30:00', 'Pending'),
+(7, 7, '2024-01-26 19:00:00', 'Pending'),
+(8, 8, '2024-01-27 20:50:00', 'Delivered'),
+(9, 9, '2024-01-28 21:15:00', 'In Transit'),
+(10, 10, '2024-01-29 19:30:00', 'Pending');
+
+
+
+
+
+
+
