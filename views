@@ -1,0 +1,10 @@
+CREATE ALGORITHM=UNDEFINED DEFINER=`johnsmith`@`%` SQL SECURITY DEFINER VIEW `ascorders` AS select `customers`.`customer_id` AS `customer_id`,`customers`.`customer_name` AS `customer_name`,`orders`.`order_id` AS `order_id`,`orders`.`total_cost` AS `total_cost`,`menu`.`menu_name` AS `menu_name`,`menuitem`.`item_name` AS `item_name`,`menuitem`.`category` AS `category` from (((`customers` join `orders` on((`customers`.`customer_id` = `orders`.`customer_id`))) join `menu` on((`orders`.`menu_id` = `menu`.`menu_id`))) join `menuitem` on((`menu`.`menu_id` = `menuitem`.`menu_id`))) order by `orders`.`total_cost`
+
+
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`johnsmith`@`%` SQL SECURITY DEFINER VIEW `ordersview` AS select `orders`.`order_id` AS `order_id`,`orders`.`quantity` AS `quantity`,`orders`.`total_cost` AS `total_cost` from `orders` where (`orders`.`quantity` > 2)
+
+
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`johnsmith`@`%` SQL SECURITY DEFINER VIEW `popular` AS select `menu`.`menu_name` AS `menu_name` from `menu` where `menu`.`menu_id` in (select `orders`.`menu_id` from `orders` where (`orders`.`quantity` > 2))
+
