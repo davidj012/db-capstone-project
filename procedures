@@ -1,0 +1,114 @@
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `CancelOrder`(IN orderID INT, OUT message VARCHAR(255))
+BEGIN
+	DELETE FROM Delivery WHERE order_id = orderID;
+	DELETE FROM Orders WHERE order_id = orderID;
+	SET message = CONCAT('Order number: ', orderID, ' was deleted');
+END
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `GetMaxQuantity`()
+BEGIN
+SELECT MAX(quantity) AS 'Max Quanitity in Orders' FROM Orders;
+END
+
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `AddBooking`(IN customer INT, IN chosenDate DATETIME, IN chosenTable INT, OUT outputMessage VARCHAR(255))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Error handling: Set output message for any SQL exception
+        SET outputMessage = 'An error occurred while adding the booking.';
+    END;
+
+    -- Perform the insert operation
+    INSERT INTO Bookings (customer_id, date, table_num) VALUES (customer, chosenDate, chosenTable);
+
+    -- If successful, set the success message
+    SET outputMessage = CONCAT('Customer_id: ', customer, ' has booked table: ', chosenTable, ' at Date: ', chosenDate);
+END
+
+
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `addValidBooking`(IN bookingDate DATETIME, IN tablenumber INT)
+BEGIN
+	START TRANSACTION;
+    IF EXISTS (SELECT * FROM Bookings WHERE date=bookingDate AND table_num = tablenumber) THEN
+		
+		ROLLBACK;
+    ELSE
+		INSERT INTO Bookings (customer_id, staff_id, date, table_num)
+VALUES('1', '3', bookingDate, tablenumber);
+
+		COMMIT;
+		
+    
+    END IF;
+    
+END
+
+
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `CancelBooking`(IN BookingID INT, OUT outputMessage VARCHAR(255))
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Error handling: Set output message for any SQL exception
+        SET outputMessage = 'An error occurred while adding the booking.';
+    END;
+
+	-- Perform the insert operation
+    DELETE FROM Bookings WHERE booking_id = bookingID;
+
+    -- If successful, set the success message
+    SET outputMessage = CONCAT('Booking ID: ', bookingID, ' has been deleted at: ', NOW());	
+END
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `GetMaxQuantity`()
+BEGIN
+SELECT MAX(quantity) AS 'Max Quanitity in Orders' FROM Orders;
+END
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `checkBooking`(IN bookingDate DATETIME, IN tablenumber INT, OUT outputmessage VARCHAR(255))
+BEGIN
+	IF EXISTS (SELECT * FROM Bookings WHERE table_num = tablenumber AND date=bookingDate) THEN 
+		SET outputmessage = CONCAT('Table ', tablenumber, ' is already booked for time slot');
+    ELSE 
+		SET outputmessage = 'Booking is available';
+
+END IF;
+END
+
+
+
+
+CREATE DEFINER=`johnsmith`@`%` PROCEDURE `UpdateBooking`(IN bookingID INT, IN bookingDate DATETIME, OUT outputMessage VARCHAR(255))
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Error handling: Set output message for any SQL exception
+        SET outputMessage = 'An error occurred while adding the booking.';
+    END;
+
+	-- Perform the insert operation
+    UPDATE Bookings SET date = bookingDate WHERE booking_id = bookingID;
+
+    -- If successful, set the success message
+    SET outputMessage = CONCAT('Booking ID: ', bookingID, ' has a new booking time of: ', bookingDate);	
+END
+
